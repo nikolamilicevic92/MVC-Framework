@@ -1,0 +1,8 @@
+RewriteEngine ON
+ # Redirect Trailing Slashes If Not A Folder...
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^(.*)/$ /$1 [L,R=301]
+# Handle Front Controller...
+RewriteCond %{REQUEST_URI} !assets/ 
+RewriteCond %{REQUEST_URI} !favicon.ico
+RewriteRule ^ index.php [L]
