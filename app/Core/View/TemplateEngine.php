@@ -34,15 +34,16 @@ class TemplateEngine
       $data['__includes__'] = self::$viewsOutput;
       if($layout) {
         $views = array_merge(
-          $views, [$layout], self::getViewDependencies($layout)
+          $views, self::getViewDependencies($layout)
         );
         $data['__content__'] = self::$viewsOutput . "$view.php";
         $view = $layout;
       }
       foreach($views as $single) {
-        if(self::viewOutdated($single)) self::compile($single);
+        if(self::viewOutdated($single)) {
+          self::compile($single);
+        }
       }
-      self::$views = null;
     }
 
     extract($data);
@@ -76,8 +77,6 @@ class TemplateEngine
   
     fclose($input);
     fclose($output);
-
-    self::storeCompilationTime($view);
   }
 
 
@@ -102,23 +101,6 @@ class TemplateEngine
 
 
   /**
-   * Makes a record of last compilation time of a given file.
-   * 
-   * @var string view
-   * 
-   * @return void
-   */
-
-  private static function storeCompilationTime($view)
-  {
-    $path = __DIR__ . '/compiled_at.json';
-    $data = json_decode(file_get_contents($path), true);
-    $data[$view] = time();
-    file_put_contents($path, json_encode($data));
-  }
-
-
-  /**
    * Checks if a view has been modified after the last compilation
    * or if a compiled version does not exist.
    * 
@@ -131,13 +113,13 @@ class TemplateEngine
    {
      //If compiled does'nt exist, view is considred outdated
      if(!file_exists(self::$viewsOutput . "$view.php")) return true;
+
      $realViewPath = str_replace('.', '/', $view);
+
      $modifiedAt = filemtime(self::$viewsSource . "$realViewPath.php");
-     $compiledAt = json_decode(file_get_contents(__DIR__ . '/compiled_at.json'), true);
+     $compiledAt = filemtime(self::$viewsOutput . "$view.php");
 
-     if(!isset($compiledAt[$view])) return true;
-
-     return $modifiedAt > $compiledAt[$view];
+     return $modifiedAt > $compiledAt;
    }
 
 

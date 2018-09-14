@@ -1,19 +1,6 @@
 <?php //This view extends default layout ?>
 
-<?php if(isset($errors)): ?>
-  <?php foreach($errors as $error): ?>
-    <div class="alert-danger text-center">
-      <?php echo htmlspecialchars($error); ?>
-    </div>
-  <?php endforeach; ?>
-<?php endif; ?>
-<?php if(isset($errors)): ?>
-  <?php foreach($success as $successMessage): ?>
-    <div class="alert-success text-center">
-      <?php echo htmlspecialchars($successMessage); ?>
-    </div>
-  <?php endforeach; ?>
-<?php endif; ?>
+<?php require $__includes__ . "includes.redirect-information.php"; ?>
 
 <form style="width:350px;margin:0 auto;" action="<?php echo htmlspecialchars(PASSWORD_RESET_URI); ?>" method="post">
   <div class="form-group">
